@@ -9,4 +9,4 @@ maja 2016, 13:17
   >na bota
 -gra sieciowa
   >uruchom serwer
-  >podlacz sie do
+  >podlacz sie do...
