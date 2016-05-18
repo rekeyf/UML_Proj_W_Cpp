@@ -17,3 +17,15 @@ Assembly System.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c5619
 Class UMLprojcpp.MyForm: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
   :System.Windows.Forms.Form
     Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Fields:
+    Boolean tura : Public
+    Int32 eot : Public
+    Boolean bot : Public
+    Boolean MP : Public
+    Boolean eog : Public
+  Methods:
+    gameStart(Int32): PrivateScope, Public, HideBySig
+    buttonOff(): PrivateScope, Public, HideBySig
+    MPbuttonON(): PrivateScope, Public, HideBySig
+    AI(): PrivateScope, Public, HideBySig
+    checker(): PrivateScope, Public, HideBySig
