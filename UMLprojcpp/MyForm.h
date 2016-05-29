@@ -1,5 +1,5 @@
 #pragma once
-#include <WinSock2.h>;
+
 namespace UMLprojcpp {
 
 	using namespace System;
@@ -8,10 +8,6 @@ namespace UMLprojcpp {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
-	using namespace System::Net;
-	using namespace System::Net::Sockets;
-	using namespace System::IO;
-	
 
 	/// <summary>
 	/// Summary for MyForm
@@ -24,7 +20,6 @@ namespace UMLprojcpp {
 		bool bot;
 		bool MP;
 		bool eog;
-		
 		void gameStart(int ustawienia)
 		{
 			//ustawienia: 1 lokalna 2P, 2 lokalna bot, 3 sieciowa serwer, 4 sieciowa klient
@@ -368,14 +363,14 @@ C3->Enabled=false;
 			// zGraczemToolStripMenuItem
 			// 
 			this->zGraczemToolStripMenuItem->Name = L"zGraczemToolStripMenuItem";
-			this->zGraczemToolStripMenuItem->Size = System::Drawing::Size(127, 22);
+			this->zGraczemToolStripMenuItem->Size = System::Drawing::Size(152, 22);
 			this->zGraczemToolStripMenuItem->Text = L"z graczem";
 			this->zGraczemToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyForm::zGraczemToolStripMenuItem_Click);
 			// 
 			// zBotemToolStripMenuItem
 			// 
 			this->zBotemToolStripMenuItem->Name = L"zBotemToolStripMenuItem";
-			this->zBotemToolStripMenuItem->Size = System::Drawing::Size(127, 22);
+			this->zBotemToolStripMenuItem->Size = System::Drawing::Size(152, 22);
 			this->zBotemToolStripMenuItem->Text = L"z botem";
 			this->zBotemToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyForm::zBotemToolStripMenuItem_Click);
 			// 
@@ -392,14 +387,12 @@ C3->Enabled=false;
 			this->uruchomSerwerToolStripMenuItem->Name = L"uruchomSerwerToolStripMenuItem";
 			this->uruchomSerwerToolStripMenuItem->Size = System::Drawing::Size(160, 22);
 			this->uruchomSerwerToolStripMenuItem->Text = L"uruchom serwer";
-			this->uruchomSerwerToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyForm::uruchomSerwerStripMenuItem_Click);
 			// 
 			// podlaczSieToolStripMenuItem
 			// 
 			this->podlaczSieToolStripMenuItem->Name = L"podlaczSieToolStripMenuItem";
 			this->podlaczSieToolStripMenuItem->Size = System::Drawing::Size(160, 22);
 			this->podlaczSieToolStripMenuItem->Text = L"podlacz sie";
-			this->podlaczSieToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyForm::podlaczSieToolStripMenuItem_Click);
 			// 
 			// A1
 			// 
@@ -420,7 +413,6 @@ C3->Enabled=false;
 			this->Wyslij->TabIndex = 2;
 			this->Wyslij->Text = L"Wyslij";
 			this->Wyslij->UseVisualStyleBackColor = true;
-			this->Wyslij->Click += gcnew System::EventHandler(this, &MyForm::Wyslij_Click);
 			// 
 			// IPinfo
 			// 
@@ -462,7 +454,6 @@ C3->Enabled=false;
 			this->textMSG->Name = L"textMSG";
 			this->textMSG->Size = System::Drawing::Size(100, 20);
 			this->textMSG->TabIndex = 7;
-			this->textMSG->TextChanged += gcnew System::EventHandler(this, &MyForm::textMSG_TextChanged);
 			// 
 			// textChat
 			// 
@@ -620,25 +611,6 @@ private: System::Void zGraczemToolStripMenuItem_Click(System::Object^  sender, S
 		 }
 private: System::Void zBotemToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
 			 gameStart(2);
-		 }
-private: System::Void uruchomSerwerStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
-			 gameStart(3);
-		 }
-private: System::Void podlaczSieToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
-			 gameStart(4);
-		 }
-
-
-private: System::Void textMSG_TextChanged(System::Object^  sender, System::EventArgs^  e) {
-		 }
-private: System::Void Wyslij_Click(System::Object^  sender, System::EventArgs^  e) {
-			 if(textMSG->Text!="" && textMSG->Text!="A1" && textMSG->Text!="A2" && textMSG->Text!="A3" && textMSG->Text!="B1" && textMSG->Text!="B2" && textMSG->Text!="B3" && textMSG->Text!="C1" && textMSG->Text!="C2" && textMSG->Text!="C3") 
-			 {
-				 textChat->AppendText("Ty: " + textMSG->Text + "\n");
-			 }
-			 textMSG->Text="";
-		 }
-private: System::Void textChat_TextChanged(System::Object^  sender, System::EventArgs^  e) {
 		 }
 };
 }
