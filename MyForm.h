@@ -1,13 +1,22 @@
 #pragma once
-
+#include <WinSock2.h>;
+//#using <System.dll>;
+#include <string>;
+#include <string.h>;
+#include <stdlib.h>;
+#include <stddef.h>;
 namespace UMLprojcpp {
-
+	using namespace std;
 	using namespace System;
 	using namespace System::ComponentModel;
 	using namespace System::Collections;
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace System::Net;
+	using namespace System::Net::Sockets;
+	using namespace System::IO;
+	using namespace System::Text::RegularExpressions;
 
 	/// <summary>
 	/// Summary for MyForm
@@ -19,10 +28,26 @@ namespace UMLprojcpp {
 		int eot;
 		bool bot;
 		bool MP;
+
+		delegate void SetTextDelegate(String^ text);
+
+	private: System::Windows::Forms::TextBox^  textBoxSelfIP;
+	private: System::ComponentModel::BackgroundWorker^  backgroundWorker1;
+	private: System::ComponentModel::BackgroundWorker^  backgroundWorker2;
+	public: 
 		bool eog;
+		String^ msg;
+		String^ odbior;
+		TcpClient^ client;
+         StreamReader^ SR;
+		 StreamWriter^ SW;
+	private: System::ComponentModel::BackgroundWorker^  backgroundWorker3;
+	public: 
+		
 		void gameStart(int ustawienia)
 		{
 			//ustawienia: 1 lokalna 2P, 2 lokalna bot, 3 sieciowa serwer, 4 sieciowa klient
+
 			eot=0;
 			tura=true;
 			eog=false;
@@ -30,8 +55,8 @@ namespace UMLprojcpp {
 			if(ustawienia==2) {bot=true; MP=false;}
 			if(ustawienia==3) {bot=false; MP=true;}
 			if(ustawienia==4) 
-			{bot=false; MP=true; tura=!tura;
-			//buttonOff();
+			{bot=false; MP=true; 
+			buttonOff();
 			}
 		
 			
@@ -246,7 +271,7 @@ C3->Enabled=false;
 			//
 			//TODO: Add the constructor code here
 			//
-			
+			IPAddresses(Dns::GetHostName());
 		}
 
 	protected:
@@ -274,7 +299,7 @@ C3->Enabled=false;
 	private: System::Windows::Forms::Label^  IPinfo;
 
 
-	private: System::Windows::Forms::Label^  labelSelfIP;
+
 	private: System::Windows::Forms::Label^  labelConnectTo;
 
 
@@ -285,7 +310,7 @@ C3->Enabled=false;
 	private: System::Windows::Forms::TextBox^  textChat;
 
 	private: System::Windows::Forms::Label^  label4;
-	private: System::Windows::Forms::Button^  A2;
+	public: System::Windows::Forms::Button^  A2;
 	private: System::Windows::Forms::Button^  A3;
 	private: System::Windows::Forms::Button^  B1;
 	private: System::Windows::Forms::Button^  B2;
@@ -325,7 +350,6 @@ C3->Enabled=false;
 			this->A1 = (gcnew System::Windows::Forms::Button());
 			this->Wyslij = (gcnew System::Windows::Forms::Button());
 			this->IPinfo = (gcnew System::Windows::Forms::Label());
-			this->labelSelfIP = (gcnew System::Windows::Forms::Label());
 			this->labelConnectTo = (gcnew System::Windows::Forms::Label());
 			this->textIPconnect = (gcnew System::Windows::Forms::TextBox());
 			this->textMSG = (gcnew System::Windows::Forms::TextBox());
@@ -339,6 +363,10 @@ C3->Enabled=false;
 			this->C3 = (gcnew System::Windows::Forms::Button());
 			this->C2 = (gcnew System::Windows::Forms::Button());
 			this->C1 = (gcnew System::Windows::Forms::Button());
+			this->textBoxSelfIP = (gcnew System::Windows::Forms::TextBox());
+			this->backgroundWorker1 = (gcnew System::ComponentModel::BackgroundWorker());
+			this->backgroundWorker2 = (gcnew System::ComponentModel::BackgroundWorker());
+			this->backgroundWorker3 = (gcnew System::ComponentModel::BackgroundWorker());
 			this->menuStrip1->SuspendLayout();
 			this->SuspendLayout();
 			// 
@@ -363,14 +391,14 @@ C3->Enabled=false;
 			// zGraczemToolStripMenuItem
 			// 
 			this->zGraczemToolStripMenuItem->Name = L"zGraczemToolStripMenuItem";
-			this->zGraczemToolStripMenuItem->Size = System::Drawing::Size(152, 22);
+			this->zGraczemToolStripMenuItem->Size = System::Drawing::Size(127, 22);
 			this->zGraczemToolStripMenuItem->Text = L"z graczem";
 			this->zGraczemToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyForm::zGraczemToolStripMenuItem_Click);
 			// 
 			// zBotemToolStripMenuItem
 			// 
 			this->zBotemToolStripMenuItem->Name = L"zBotemToolStripMenuItem";
-			this->zBotemToolStripMenuItem->Size = System::Drawing::Size(152, 22);
+			this->zBotemToolStripMenuItem->Size = System::Drawing::Size(127, 22);
 			this->zBotemToolStripMenuItem->Text = L"z botem";
 			this->zBotemToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyForm::zBotemToolStripMenuItem_Click);
 			// 
@@ -387,12 +415,14 @@ C3->Enabled=false;
 			this->uruchomSerwerToolStripMenuItem->Name = L"uruchomSerwerToolStripMenuItem";
 			this->uruchomSerwerToolStripMenuItem->Size = System::Drawing::Size(160, 22);
 			this->uruchomSerwerToolStripMenuItem->Text = L"uruchom serwer";
+			this->uruchomSerwerToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyForm::uruchomSerwerStripMenuItem_Click);
 			// 
 			// podlaczSieToolStripMenuItem
 			// 
 			this->podlaczSieToolStripMenuItem->Name = L"podlaczSieToolStripMenuItem";
 			this->podlaczSieToolStripMenuItem->Size = System::Drawing::Size(160, 22);
 			this->podlaczSieToolStripMenuItem->Text = L"podlacz sie";
+			this->podlaczSieToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyForm::podlaczSieToolStripMenuItem_Click);
 			// 
 			// A1
 			// 
@@ -413,6 +443,7 @@ C3->Enabled=false;
 			this->Wyslij->TabIndex = 2;
 			this->Wyslij->Text = L"Wyslij";
 			this->Wyslij->UseVisualStyleBackColor = true;
+			this->Wyslij->Click += gcnew System::EventHandler(this, &MyForm::Wyslij_Click);
 			// 
 			// IPinfo
 			// 
@@ -422,15 +453,6 @@ C3->Enabled=false;
 			this->IPinfo->Size = System::Drawing::Size(52, 13);
 			this->IPinfo->TabIndex = 3;
 			this->IPinfo->Text = L"Twoje IP:";
-			// 
-			// labelSelfIP
-			// 
-			this->labelSelfIP->AutoSize = true;
-			this->labelSelfIP->Location = System::Drawing::Point(317, 39);
-			this->labelSelfIP->Name = L"labelSelfIP";
-			this->labelSelfIP->Size = System::Drawing::Size(19, 13);
-			this->labelSelfIP->TabIndex = 4;
-			this->labelSelfIP->Text = L"----";
 			// 
 			// labelConnectTo
 			// 
@@ -454,6 +476,7 @@ C3->Enabled=false;
 			this->textMSG->Name = L"textMSG";
 			this->textMSG->Size = System::Drawing::Size(100, 20);
 			this->textMSG->TabIndex = 7;
+			this->textMSG->TextChanged += gcnew System::EventHandler(this, &MyForm::textMSG_TextChanged);
 			// 
 			// textChat
 			// 
@@ -560,11 +583,34 @@ C3->Enabled=false;
 			this->C1->Visible = false;
 			this->C1->Click += gcnew System::EventHandler(this, &MyForm::button1_Click);
 			// 
+			// textBoxSelfIP
+			// 
+			this->textBoxSelfIP->Location = System::Drawing::Point(317, 36);
+			this->textBoxSelfIP->Name = L"textBoxSelfIP";
+			this->textBoxSelfIP->ReadOnly = true;
+			this->textBoxSelfIP->Size = System::Drawing::Size(100, 20);
+			this->textBoxSelfIP->TabIndex = 18;
+			// 
+			// backgroundWorker1
+			// 
+			this->backgroundWorker1->DoWork += gcnew System::ComponentModel::DoWorkEventHandler(this, &MyForm::backgroundWorker1_DoWork);
+			// 
+			// backgroundWorker2
+			// 
+			this->backgroundWorker2->WorkerSupportsCancellation = true;
+			this->backgroundWorker2->DoWork += gcnew System::ComponentModel::DoWorkEventHandler(this, &MyForm::backgroundWorker2_DoWork);
+			// 
+			// backgroundWorker3
+			// 
+			this->backgroundWorker3->WorkerSupportsCancellation = true;
+			this->backgroundWorker3->DoWork += gcnew System::ComponentModel::DoWorkEventHandler(this, &MyForm::backgroundWorker3_DoWork);
+			// 
 			// MyForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(435, 262);
+			this->Controls->Add(this->textBoxSelfIP);
 			this->Controls->Add(this->C1);
 			this->Controls->Add(this->C2);
 			this->Controls->Add(this->C3);
@@ -578,7 +624,6 @@ C3->Enabled=false;
 			this->Controls->Add(this->textMSG);
 			this->Controls->Add(this->textIPconnect);
 			this->Controls->Add(this->labelConnectTo);
-			this->Controls->Add(this->labelSelfIP);
 			this->Controls->Add(this->IPinfo);
 			this->Controls->Add(this->Wyslij);
 			this->Controls->Add(this->A1);
@@ -596,21 +641,232 @@ C3->Enabled=false;
 	private: System::Void MyForm_Load(System::Object^  sender, System::EventArgs^  e) {
 				 
 			 }
+			
+			 
+
+
+	public: void IPAddresses( String^ server )
+{
+	/*
+   try
+   {
+      System::Text::ASCIIEncoding^ ASCII = gcnew System::Text::ASCIIEncoding;
+      IPHostEntry^ heserver = Dns::GetHostEntry( server );
+      System::Collections::IEnumerator^ myEnum = heserver->AddressList->GetEnumerator();
+      while ( myEnum->MoveNext() )
+      {
+         IPAddress^ curAdd = safe_cast<IPAddress^>(myEnum->Current);
+		 
+		 textBoxSelfIP->Text=("" + curAdd );
+      }
+	  
+   }
+   catch ( Exception^ e ) 
+   {
+   }*/
+   textBoxSelfIP->Text = ("127.0.0.1");
+}
+
+
 	private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e) {
 				 Button^ p = safe_cast<Button^>(sender); 
 				 p->Enabled=false;
 				 if(tura) {p->Text="X";} else {p->Text="O";}
 				 tura=!tura;
-				 eot++;
-				 checker();
+				 
+				 
+				 if(MP) 
+				 { msg = p->Name; //TUTAJ ERROR
+				backgroundWorker3->RunWorkerAsync();
+				 buttonOff(); 
+				
+				 }
 				 if(bot && !tura) AI();
-				 //if(MP && tura) {
+				 eot++;
+				checker();
 			 }
 private: System::Void zGraczemToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
 			 gameStart(1);
 		 }
 private: System::Void zBotemToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
 			 gameStart(2);
+		 }
+private: System::Void uruchomSerwerStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
+			 gameStart(3);
+			 
+			  
+			 TcpListener^ listener = gcnew  TcpListener(IPAddress::Any, 8080);
+            listener->Start();
+			
+			client = listener->AcceptTcpClient();
+			SR = gcnew StreamReader(client->GetStream());
+            SW = gcnew StreamWriter(client->GetStream());
+            SW->AutoFlush = true;
+            backgroundWorker1->RunWorkerAsync(); //odbiornik start
+            backgroundWorker2->WorkerSupportsCancellation = true; //mozliwosc zatrzymania watku
+
+
+		 }
+private: System::Void podlaczSieToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
+			 gameStart(4);
+			 IPAddress^ polaczenie = IPAddress::Parse(textIPconnect->Text );
+			 client = gcnew TcpClient();
+
+            IPEndPoint^ IP_end = gcnew IPEndPoint(polaczenie,8080);
+            try
+            {
+                client->Connect(IP_end);
+                
+                if (client->Connected)
+                {
+					
+                    textChat->AppendText("Polaczono \n");
+                    SR = gcnew StreamReader(client->GetStream());
+					SW = gcnew StreamWriter(client->GetStream());
+                    SW->AutoFlush = true;
+                    backgroundWorker1->RunWorkerAsync(); //odbiornik start
+                    backgroundWorker2->WorkerSupportsCancellation = true; //mozliwosc zatrzymania watku
+                    buttonOff();
+                    
+                }
+            }
+            catch (Exception^ e){ textChat->AppendText("NIEPolaczono \n");}
+		 }
+
+
+private: System::Void textMSG_TextChanged(System::Object^  sender, System::EventArgs^  e) {
+		 }
+private: System::Void Wyslij_Click(System::Object^  sender, System::EventArgs^  e) {
+			 
+			/* if(textMSG->Text=="OSZUKUJE") { 
+			  
+				 B2->Enabled=false;
+				 if(tura) {B2->Text="X";} else {B2->Text="O";}
+				 tura=!tura;
+				 eot++;
+				 checker();
+				 if(!eog) MPbuttonON();
+			 } ;)  */ 
+			 if(textMSG->Text!="" && textMSG->Text!="A1" && textMSG->Text!="A2" && textMSG->Text!="A3" && textMSG->Text!="B1" && textMSG->Text!="B2" && textMSG->Text!="B3" && textMSG->Text!="C1" && textMSG->Text!="C2" && textMSG->Text!="C3") 
+			 {
+				 textChat->AppendText("Ty: " + textMSG->Text + "\n");
+			//	 backgroundWorker2->RunWorkerAsync(1);
+				 
+				 SW->WriteLine(textMSG->Text);
+				textMSG->Text="";
+				 
+			 }
+			 
+		 }
+private: System::Void textChat_TextChanged(System::Object^  sender, System::EventArgs^  e) {
+		 }
+public: void ruchMP(System::Object^  sp, System::EventArgs^  e) {
+				 Button^ p = safe_cast<Button^>(sp); 
+				 p->Enabled=false;
+				 if(tura) {p->Text="X";} else {p->Text="O";}
+				 tura=!tura;
+				 eot++;
+				 checker(); 
+			 }
+private: System::Void backgroundWorker1_DoWork(System::Object^  sender, System::ComponentModel::DoWorkEventArgs^  e) {
+			 bool once = true;
+			 if (client->Connected && once) {once=!once;}//{ ButtonOff(); ButtonOn(); once = false; }
+            while (client->Connected)
+            {
+                try
+                {
+                    odbior = SR->ReadLine();
+					if (odbior == "A1") 
+						{ 
+						if(tura) {A1->Text="X";} else {A1->Text="O";}
+						tura=!tura;
+						eot++;
+						checker();
+						MPbuttonON();
+						}
+                     if (odbior == "A2") {if(tura) {A2->Text="X";} else {A2->Text="O";}
+					tura=!tura;
+					eot++;
+					checker();
+					MPbuttonON();}
+                   if (odbior == "A3") { if(tura) {A3->Text="X";} else {A3->Text="O";}
+					tura=!tura;
+					eot++;
+					checker();
+					MPbuttonON();}
+
+                    if (odbior == "B1") {if(tura) {B1->Text="X";} else {B1->Text="O";}
+					tura=!tura;
+					eot++;
+					checker();
+					MPbuttonON();}
+                    if (odbior == "B2") {if(tura) {B2->Text="X";} else {B2->Text="O";}
+					tura=!tura;
+					eot++;
+					checker();
+					MPbuttonON();}
+                    if (odbior == "B3") {if(tura) {B3->Text="X";} else {B3->Text="O";}
+					tura=!tura;
+					eot++;
+					checker();
+					MPbuttonON();}
+
+                    if (odbior == "C1") { if(tura) {C1->Text="X";} else {C1->Text="O";}
+					tura=!tura;
+					eot++;
+					checker();
+					MPbuttonON();}
+                    if (odbior == "C2") { if(tura) {C2->Text="X";} else {C2->Text="O";}
+					tura=!tura;
+					eot++;
+					checker();
+					MPbuttonON();}
+                    if (odbior == "C3") { if(tura) {C3->Text="X";} else {C3->Text="O";}
+					tura=!tura;
+					eot++;
+					checker();
+					MPbuttonON();}
+
+					String^ text = "Drugi gracz: " + odbior + "\n";
+
+					SetText(text);
+
+
+				  
+                    odbior = "";
+                }
+                catch(Exception^ e ) { 
+				
+				}
+            }
+		 }
+
+
+private:
+	void SetText(String^ text)
+	{
+		if (this->textChat->InvokeRequired)
+		{
+			SetTextDelegate^ d =
+				gcnew SetTextDelegate(this, &MyForm::SetText);
+			this->Invoke(d, gcnew array<Object^> { text });
+		}
+		else
+		{
+			textChat->AppendText(text);
+		}
+	}
+
+private: System::Void backgroundWorker2_DoWork(System::Object^  sender, System::ComponentModel::DoWorkEventArgs^  e) {
+			 SW->WriteLine(textMSG->Text);
+			 textMSG->Text="";
+			 backgroundWorker2->CancelAsync();
+		 }
+private: System::Void backgroundWorker3_DoWork(System::Object^  sender, System::ComponentModel::DoWorkEventArgs^  e) {
+			 
+                SW->WriteLine(msg);
+                msg = "";
+				backgroundWorker3->CancelAsync();
 		 }
 };
 }
