@@ -5,6 +5,9 @@
 #include <string.h>;
 #include <stdlib.h>;
 #include <stddef.h>;
+
+#include "Plansza.h";
+
 namespace UMLprojcpp {
 	using namespace std;
 	using namespace System;
@@ -17,7 +20,7 @@ namespace UMLprojcpp {
 	using namespace System::Net::Sockets;
 	using namespace System::IO;
 	using namespace System::Text::RegularExpressions;
-
+	
 	/// <summary>
 	/// Summary for MyForm
 	/// </summary>
@@ -28,7 +31,7 @@ namespace UMLprojcpp {
 		int eot;
 		bool bot;
 		bool MP;
-
+		
 		delegate void SetTextDelegate(String^ text);
 
 	private: System::Windows::Forms::TextBox^  textBoxSelfIP;
@@ -47,7 +50,7 @@ namespace UMLprojcpp {
 		void gameStart(int ustawienia)
 		{
 			//ustawienia: 1 lokalna 2P, 2 lokalna bot, 3 sieciowa serwer, 4 sieciowa klient
-
+			//Plansza jakasPlansza;
 			eot=0;
 			tura=true;
 			eog=false;
@@ -58,7 +61,17 @@ namespace UMLprojcpp {
 			{bot=false; MP=true; 
 			buttonOff();
 			}
-		
+	Pole1.owner=0;
+ Pole2.owner=0;
+ Pole3.owner=0;
+
+Pole4.owner=0;
+Pole5.owner=0;
+ Pole6.owner=0;
+
+ Pole7.owner=0;
+Pole8.owner=0;
+ Pole9.owner=0;	
 			
 A1->Text="";
 A1->BackColor=System::Drawing::Color::White;
@@ -229,35 +242,34 @@ C3->Enabled=false;
 		void checker()
 		{
 			//poziomo
-			if (A1->Text == A2->Text && A1->Text == A3->Text && A1->Text != "") { eog = true; A1->BackColor = System::Drawing::Color::Red; 
+			if (Pole1.owner == Pole2.owner && Pole1.owner == Pole3.owner && Pole1.owner != 0) { eog = true; A1->BackColor = System::Drawing::Color::Red; 
 				A2->BackColor = System::Drawing::Color::Red; 
 				A3->BackColor = System::Drawing::Color::Red; }
-            if (B1->Text == B2->Text && B1->Text == B3->Text && B1->Text != "") { eog = true; B1->BackColor = System::Drawing::Color::Red; 
+            if (Pole4.owner == Pole5.owner && Pole4.owner == Pole6.owner && Pole4.owner != 0) { eog = true; B1->BackColor = System::Drawing::Color::Red; 
 				B2->BackColor = System::Drawing::Color::Red; 
 				B3->BackColor = System::Drawing::Color::Red; }
-            if (C1->Text == C2->Text && C1->Text == C3->Text && C1->Text != "") { eog = true; C1->BackColor = System::Drawing::Color::Red; 
+            if (Pole7.owner == Pole8.owner && Pole7.owner == Pole9.owner && Pole7.owner != 0) { eog = true; C1->BackColor = System::Drawing::Color::Red; 
 				C2->BackColor = System::Drawing::Color::Red; 
 				C3->BackColor = System::Drawing::Color::Red; }
 
 			//pionowo
-            if (A1->Text == B1->Text && A1->Text == C1->Text && A1->Text != "") { eog = true; A1->BackColor = System::Drawing::Color::Red;
+            if (Pole1.owner == Pole4.owner && Pole1.owner == Pole7.owner && Pole1.owner != 0) { eog = true; A1->BackColor = System::Drawing::Color::Red;
 				B1->BackColor =System::Drawing::Color::Red;
 				C1->BackColor = System::Drawing::Color::Red; }
-            if (A2->Text == B2->Text && A2->Text == C2->Text && A2->Text != "") { eog = true; A2->BackColor = System::Drawing::Color::Red;
+            if (Pole2.owner == Pole5.owner && Pole2.owner == Pole8.owner && Pole2.owner != 0) { eog = true; A2->BackColor = System::Drawing::Color::Red;
 				B2->BackColor = System::Drawing::Color::Red;
 				C2->BackColor = System::Drawing::Color::Red; }
-            if (A3->Text == B3->Text && A3->Text == C3->Text && A3->Text != "") { eog = true; A3->BackColor = System::Drawing::Color::Red;
+            if (Pole3.owner == Pole6.owner && Pole3.owner == Pole9.owner && Pole3.owner != 0) { eog = true; A3->BackColor = System::Drawing::Color::Red;
 				B3->BackColor = System::Drawing::Color::Red;
 				C3->BackColor = System::Drawing::Color::Red; }
 
 			//na wskros
-            if (A1->Text == B2->Text && A1->Text == C3->Text && A1->Text != "") { eog = true; A1->BackColor = System::Drawing::Color::Red;
+            if (Pole1.owner == Pole5.owner && Pole1.owner == Pole9.owner && Pole1.owner != 0) { eog = true; A1->BackColor = System::Drawing::Color::Red;
 				B2->BackColor = System::Drawing::Color::Red;
 				C3->BackColor = System::Drawing::Color::Red; }
-            if (A3->Text == B2->Text && A3->Text == C1->Text && A3->Text != "") { eog = true; C1->BackColor =System::Drawing::Color::Red; 
+            if (Pole3.owner == Pole5.owner && Pole3.owner == Pole7.owner && Pole3.owner != 0) { eog = true; C1->BackColor =System::Drawing::Color::Red; 
 				B2->BackColor = System::Drawing::Color::Red;
 				A3->BackColor = System::Drawing::Color::Red; }
-            
 			if(eog) 
 			{
 				buttonOff();
@@ -298,7 +310,23 @@ C3->Enabled=false;
 	private: System::Windows::Forms::Button^  Wyslij;
 	private: System::Windows::Forms::Label^  IPinfo;
 
+public: 
+	
+	Plansza Pl();
+			Pole Pole1;
+			Pole Pole2;
+			Pole Pole3;
 
+			Pole Pole4;
+			Pole Pole5;
+			Pole Pole6;
+
+			Pole Pole7;
+			Pole Pole8;
+			Pole Pole9;
+
+			
+			
 
 	private: System::Windows::Forms::Label^  labelConnectTo;
 
@@ -671,12 +699,38 @@ C3->Enabled=false;
 	private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e) {
 				 Button^ p = safe_cast<Button^>(sender); 
 				 p->Enabled=false;
-				 if(tura) {p->Text="X";} else {p->Text="O";}
+				 if(tura) {
+					 p->Text="X";
+					 if (p->Name == "A1") Pole1.owner=1;
+if (p->Name == "A2") Pole2.owner=1;
+if (p->Name == "A3") Pole3.owner=1;
+
+if (p->Name == "B1") Pole4.owner=1;
+if (p->Name == "B2") Pole5.owner=1;
+if (p->Name == "B3") Pole6.owner=1;
+
+if (p->Name == "C1") Pole7.owner=1;
+if (p->Name == "C2") Pole8.owner=1;
+if (p->Name == "C3") Pole9.owner=1;
+				 } else {
+					 p->Text="O";
+					 if (p->Name == "A1") Pole1.owner=2;
+if (p->Name == "A2") Pole2.owner=2;
+if (p->Name == "A3") Pole3.owner=2;
+
+if (p->Name == "B1") Pole4.owner=2;
+if (p->Name == "B2") Pole5.owner=2;
+if (p->Name == "B3") Pole6.owner=2;
+
+if (p->Name == "C1") Pole7.owner=2;
+if (p->Name == "C2") Pole8.owner=2;
+if (p->Name == "C3") Pole9.owner=2;
+				 }
 				 tura=!tura;
 				 
 				 
 				 if(MP) 
-				 { msg = p->Name; //TUTAJ ERROR
+				 { msg = p->Name; 
 				backgroundWorker3->RunWorkerAsync();
 				 buttonOff(); 
 				
@@ -685,6 +739,7 @@ C3->Enabled=false;
 				 eot++;
 				checker();
 			 }
+
 private: System::Void zGraczemToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
 			 gameStart(1);
 		 }
@@ -693,7 +748,7 @@ private: System::Void zBotemToolStripMenuItem_Click(System::Object^  sender, Sys
 		 }
 private: System::Void uruchomSerwerStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
 			 gameStart(3);
-			 
+	 
 			  
 			 TcpListener^ listener = gcnew  TcpListener(IPAddress::Any, 8080);
             listener->Start();

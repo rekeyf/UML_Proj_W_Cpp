@@ -1,6 +1,10 @@
 #include "Plansza.h"
+#include "Pole.h"
 
-
-Plansza::Plansza(void)
+Plansza::Plansza()
 {
+	//this->p1  Pole::Pole(1);
+	this->eot=0;
+	this->eog=false;
+	
 }

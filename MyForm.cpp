@@ -8,9 +8,10 @@ using namespace System::Windows::Forms;
 void main(array<String^>^ args) {
 	Application::EnableVisualStyles();
 	Application::SetCompatibleTextRenderingDefault(false);
-
+	
 	UMLprojcpp::MyForm form;
 	Application::Run(%form);
+	
 }
 
 
